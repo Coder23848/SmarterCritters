@@ -1,0 +1,11 @@
+{
+	"id": "smarterstealth",
+	"name": "Smarter Stealth",
+	"version": "1.0.0",
+	"hide_version": false,
+	"authors": "Coder23848",
+	"description": "Makes white lizards a little bit better at stealth.",
+	"requirements": [],
+	"requirements_names": [],
+	"checksum_override_version": false
+}
