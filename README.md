@@ -1,3 +1,3 @@
 # SmarterStealth
-A mod for Rain World that makes white lizards a little bit better at stealth by making them more patient.
-Available on the Steam Workshop. Please report any issues you find!
+A mod for Rain World that teaks a few AI behaviours to make creatures smarter. Fully configurable.
+Available on the Steam Workshop. Please report any issues you find.
