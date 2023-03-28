@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SmarterCritters
 {
-    [BepInPlugin("com.coder23848.smartercritters", PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+    [BepInPlugin("com.coder23848.smarterstealth", PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin
     {
 #pragma warning disable IDE0051 // Visual Studio is whiny
