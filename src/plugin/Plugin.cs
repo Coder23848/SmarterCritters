@@ -197,6 +197,10 @@ namespace SmarterCritters
                                 if (connection.type == MovementConnection.MovementType.Standard && connection.DestTile.y != connection.StartTile.y && self.lizard.room.GetTile(connection.destinationCoord).verticalBeam)
                                 {
                                     thisHarmCost += 490; // Going up or down on a pole briefly exposes its backside.
+                                    if (!alreadyInDanger) // Freezing on a vertical pole is a very bad idea.
+                                    {
+                                        canGiveUp = true;
+                                    }
                                 }
                                 if (connection.type == MovementConnection.MovementType.Standard && connection.destinationCoord.x != connection.startCoord.x && myPos.x < pos.x == connection.destinationCoord.x < connection.startCoord.x)
                                 {
@@ -208,7 +212,7 @@ namespace SmarterCritters
                                 }
                             }
                         }
-                        harmCost += thisHarmCost * Mathf.Pow(i.EstimatedChanceOfFinding, 0.25f);
+                        harmCost += thisHarmCost * Mathf.Pow(i.EstimatedChanceOfFinding, 0.25f); // If they aren't confident as to where the danger is, they shouldn't worry about it.
                     }
                 }
 
@@ -219,7 +223,7 @@ namespace SmarterCritters
                     harmCost /= 10f; // Red lizards don't care about as much getting hurt!
                 }
                 ret.resistance += harmCost;
-                if (canGiveUp && harmCost >= 400f) // This move is too risky! Don't do it.
+                if (canGiveUp && harmCost >= 375f) // This move is too risky! Don't do it.
                 {
                     ret.legality = PathCost.Legality.Unallowed;
                 }
