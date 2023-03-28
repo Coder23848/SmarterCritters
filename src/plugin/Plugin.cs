@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SmarterCritters
 {
-    [BepInPlugin("com.coder23848.smarterstealth", PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+    [BepInPlugin("com.coder23848.smartercritters", PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin
     {
 #pragma warning disable IDE0051 // Visual Studio is whiny
@@ -30,7 +30,7 @@ namespace SmarterCritters
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {
             orig(self);
-            MachineConnector.SetRegisteredOI(PluginInfo.PLUGIN_GUID, PluginOptions.Instance);
+            Debug.Log("Smarter Critters config setup: " + MachineConnector.SetRegisteredOI(PluginInfo.PLUGIN_GUID, PluginOptions.Instance));
         }
 
         ConditionalWeakTable<Tracker.CreatureRepresentation, PhysicalObject[]> trackedSlugcatHeldItemsData = new();
