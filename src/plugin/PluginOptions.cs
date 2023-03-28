@@ -1,7 +1,7 @@
 ﻿using Menu.Remix.MixedUI;
 using UnityEngine;
 
-namespace SmarterStealth
+namespace SmarterCritters
 {
     public class PluginOptions : OptionInterface
     {

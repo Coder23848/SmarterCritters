@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace SmarterStealth
+namespace SmarterCritters
 {
     [BepInPlugin("com.coder23848.smarterstealth", PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin
@@ -18,9 +18,12 @@ namespace SmarterStealth
             On.LizardGraphics.Update += LizardGraphics_Update;
             On.LizardGraphics.DrawSprites += LizardGraphics_DrawSprites;
             On.Lizard.Update += Lizard_Update;
+
             On.DropBugAI.ValidCeilingSpot += DropBugAI_ValidCeilingSpot;
+
             On.LizardAI.TravelPreference += LizardAI_TravelPreference;
             On.Tracker.CreatureRepresentation.Update += CreatureRepresentation_Update;
+
             On.RainWorld.OnModsInit += RainWorld_OnModsInit;
         }
 
@@ -31,7 +34,6 @@ namespace SmarterStealth
         }
 
         ConditionalWeakTable<Tracker.CreatureRepresentation, PhysicalObject[]> trackedSlugcatHeldItemsData = new();
-        
         private bool SlugcatCanPenetrateLizardHeadArmor(Tracker.CreatureRepresentation slugcat)
         {
             if (trackedSlugcatHeldItemsData.TryGetValue(slugcat, out PhysicalObject[] items))
@@ -75,6 +77,8 @@ namespace SmarterStealth
         private PathCost LizardAI_TravelPreference(On.LizardAI.orig_TravelPreference orig, LizardAI self, MovementConnection connection, PathCost cost)
         {
             PathCost ret = orig(self, connection, cost);
+
+            IntVector2 myPos = self.lizard.room.GetTilePosition(self.lizard.mainBodyChunk.pos);
 
             if (PluginOptions.LizardsUnderstandSlugcatCombat.Value && self.lizard.abstractCreature.personality.nervous > 0.1f) // Some lizards just don't pay attention to their prey's weaponry!
             {
@@ -148,37 +152,41 @@ namespace SmarterStealth
                             }
                         }
 
-                        IntVector2 myPos = self.lizard.room.GetTilePosition(self.lizard.mainBodyChunk.pos);
+                        float thisHarmCost = 0;
+
                         bool closeToDanger(IntVector2 pos) => badTiles.Contains(pos) || badTiles.Contains(pos + new IntVector2(0, 1)) || badTiles.Contains(pos + new IntVector2(0, -1));
                         bool alreadyInDanger = closeToDanger(myPos);
                         if (closeToDanger(connection.DestTile))
                         {
-                            if (SlugcatCanPenetrateLizardHeadArmor(i) && // Slugcat has the weaponry required for the flip and hit tactic (A.K.A. a rock and a spear).
+                            if (SlugcatCanPenetrateLizardHeadArmor(i) && // The slugcat has the weaponry required for the flip and hit tactic (A.K.A. a rock and a spear).
                                 !self.lizard.room.aimap.getAItile(connection.DestTile).narrowSpace && // Lizards can't be flipped if they don't have the space to.
                                 closeToDanger(self.lizard.room.aimap.getAItile(connection.DestTile).fallRiskTile) && // Flip and hit tactics can't be done reliably if the lizard falls out of attack range after getting flipped.
                                 self.lizard.Template.type != CreatureTemplate.Type.RedLizard) // Red lizards can't be flipped.
                             {
                                 if (alreadyInDanger)
                                 {
-                                    harmCost += 5;
+                                    thisHarmCost += 5;
                                 }
                                 else
                                 {
-                                    harmCost += 500;
+                                    thisHarmCost += 500;
                                     if (self.lizard.abstractCreature.personality.nervous > 0.8f)
                                     {
                                         canGiveUp = true;
                                     }
                                 }
                             }
-                            if (SlugcatHasAnyStunningWeapon(i) && // Slugcat is capable of stunning the lizard.
-                                !self.lizard.room.aimap.TileAccessibleToCreature(self.lizard.room.aimap.getAItile(connection.DestTile).fallRiskTile, StaticWorld.GetCreatureTemplate(self.lizard.Template.type)) && // The lizard will fall into a pit if hit.
-                                (self.lizard.room.waterObject == null || self.lizard.room.waterObject.fWaterLevel < 0 || self.lizard.room.waterInverted || self.lizard.room.waterObject.WaterIsLethal)) // The lizard can't be saved by water.
+                            if (SlugcatHasAnyStunningWeapon(i)) // The slugcat is capable of stunning the lizard.
                             {
-                                harmCost += 500;
-                                if (self.lizard.abstractCreature.personality.nervous > 0.8f)
+                                thisHarmCost += 1; // Rocks are annoying!
+                                if (!self.lizard.room.aimap.TileAccessibleToCreature(self.lizard.room.aimap.getAItile(connection.DestTile).fallRiskTile, StaticWorld.GetCreatureTemplate(self.lizard.Template.type)) && // The lizard will fall into a pit if hit.
+                                (self.lizard.room.waterObject == null || self.lizard.room.waterObject.fWaterLevel < 0 || self.lizard.room.waterInverted || self.lizard.room.waterObject.WaterIsLethal)) // The lizard can't be saved by water.
                                 {
-                                    canGiveUp = true;
+                                    thisHarmCost += 500;
+                                    if (self.lizard.abstractCreature.personality.nervous > 0.8f)
+                                    {
+                                        canGiveUp = true;
+                                    }
                                 }
                             }
                         }
@@ -186,9 +194,9 @@ namespace SmarterStealth
                         {
                             if (SlugcatHasSpear(i))
                             {
-                                if (connection.type == MovementConnection.MovementType.Standard && connection.DestTile.y != connection.StartTile.y)
+                                if (connection.type == MovementConnection.MovementType.Standard && connection.DestTile.y != connection.StartTile.y && self.lizard.room.GetTile(connection.destinationCoord).verticalBeam)
                                 {
-                                    harmCost += 25; // Going up or down briefly exposes its backside.
+                                    thisHarmCost += 490; // Going up or down on a pole briefly exposes its backside.
                                 }
                                 if (connection.type == MovementConnection.MovementType.Standard && connection.destinationCoord.x != connection.startCoord.x && myPos.x < pos.x == connection.destinationCoord.x < connection.startCoord.x)
                                 {
@@ -200,6 +208,7 @@ namespace SmarterStealth
                                 }
                             }
                         }
+                        harmCost += thisHarmCost * Mathf.Pow(i.EstimatedChanceOfFinding, 0.25f);
                     }
                 }
 

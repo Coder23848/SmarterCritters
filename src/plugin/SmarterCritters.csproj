@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyName>smarterstealth</AssemblyName>
-    <Description>Smarter Stealth</Description>
+    <AssemblyName>smartercritters</AssemblyName>
+    <Description>Smarter Critters</Description>
     <Version>1.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
