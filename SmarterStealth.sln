@@ -5,9 +5,36 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{48F17CFB-D4AF-4EAA-9C4E-6EB3A4081D8A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{26B5BDE3-1677-42F9-909B-E7F7201B0A17}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		steam_workshop_description.txt = steam_workshop_description.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mod", "mod", "{B1B870E1-03C2-4466-9907-3018E37070D4}"
+	ProjectSection(SolutionItems) = preProject
+		mod\modinfo.json = mod\modinfo.json
+		mod\thumbnail.png = mod\thumbnail.png
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmarterCritters", "src\plugin\SmarterCritters.csproj", "{9B5AEBD9-DA00-4444-BD95-1F7F4F109846}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B5AEBD9-DA00-4444-BD95-1F7F4F109846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B5AEBD9-DA00-4444-BD95-1F7F4F109846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B5AEBD9-DA00-4444-BD95-1F7F4F109846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B5AEBD9-DA00-4444-BD95-1F7F4F109846}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9B5AEBD9-DA00-4444-BD95-1F7F4F109846} = {48F17CFB-D4AF-4EAA-9C4E-6EB3A4081D8A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4A5FC9D9-E620-4E00-BBCE-5B92D66C78A9}

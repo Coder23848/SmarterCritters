@@ -4,7 +4,7 @@
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>smarterstealth</AssemblyName>
     <Description>Smarter Critters</Description>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\..\game\RainWorld_Data\StreamingAssets\mods\$(SolutionName)\plugins</OutputPath>
+    <OutputPath>..\..\..\game\RainWorld_Data\StreamingAssets\mods\$(SolutionName)\newest\plugins</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

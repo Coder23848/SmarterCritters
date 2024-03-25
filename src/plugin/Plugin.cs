@@ -159,8 +159,8 @@ namespace SmarterCritters
                         if (closeToDanger(connection.DestTile))
                         {
                             if (SlugcatCanPenetrateLizardHeadArmor(i) && // The slugcat has the weaponry required for the flip and hit tactic (A.K.A. a rock and a spear).
-                                !self.lizard.room.aimap.getAItile(connection.DestTile).narrowSpace && // Lizards can't be flipped if they don't have the space to.
-                                closeToDanger(self.lizard.room.aimap.getAItile(connection.DestTile).fallRiskTile) && // Flip and hit tactics can't be done reliably if the lizard falls out of attack range after getting flipped.
+                                !self.lizard.room.aimap.getAItile(connection.DestTile.x, connection.DestTile.y).narrowSpace && // Lizards can't be flipped if they don't have the space to.
+                                closeToDanger(self.lizard.room.aimap.getAItile(connection.DestTile.x, connection.DestTile.y).fallRiskTile) && // Flip and hit tactics can't be done reliably if the lizard falls out of attack range after getting flipped.
                                 self.lizard.Template.type != CreatureTemplate.Type.RedLizard) // Red lizards can't be flipped.
                             {
                                 if (alreadyInDanger)
@@ -179,7 +179,7 @@ namespace SmarterCritters
                             if (SlugcatHasAnyStunningWeapon(i)) // The slugcat is capable of stunning the lizard.
                             {
                                 thisHarmCost += 1; // Rocks are annoying!
-                                if (!self.lizard.room.aimap.TileAccessibleToCreature(self.lizard.room.aimap.getAItile(connection.DestTile).fallRiskTile, StaticWorld.GetCreatureTemplate(self.lizard.Template.type)) && // The lizard will fall into a pit if hit.
+                                if (!self.lizard.room.aimap.TileAccessibleToCreature(self.lizard.room.aimap.getAItile(connection.DestTile.x, connection.DestTile.y).fallRiskTile, StaticWorld.GetCreatureTemplate(self.lizard.Template.type)) && // The lizard will fall into a pit if hit.
                                 (self.lizard.room.waterObject == null || self.lizard.room.waterObject.fWaterLevel < 0 || self.lizard.room.waterInverted || self.lizard.room.waterObject.WaterIsLethal)) // The lizard can't be saved by water.
                                 {
                                     thisHarmCost += 500;
@@ -235,11 +235,13 @@ namespace SmarterCritters
         private bool DropBugAI_ValidCeilingSpot(On.DropBugAI.orig_ValidCeilingSpot orig, Room room, IntVector2 test)
         {
             bool ret = orig(room, test);
-            IntVector2 landing = room.aimap.getAItile(test).fallRiskTile;
+            IntVector2 landing = room.aimap.getAItile(test.x, test.y).fallRiskTile;
             if (PluginOptions.DropwigPitAvoidance.Value && ret && (landing == new IntVector2(-1, -1) || !room.aimap.TileAccessibleToCreature(landing, StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.StandardGroundCreature))))
             {
-                ret = false;
+                //room.AddObject(new DebugSprite(room.MiddleOfTile(test), new("Futile_White") { scaleX = 0.5f, scaleY = 0.5f, color = new(1, 1, 0)}, room));
+                return false;
             }
+            //room.AddObject(new DebugSprite(room.MiddleOfTile(test), new("Futile_White") { scaleX = 0.5f, scaleY = 0.5f, color = ret ? new(0, 1, 0) : new(1, 0, 0) }, room));
             return ret;
         }
 

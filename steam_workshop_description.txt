@@ -1,0 +1,3 @@
+A small collection of tweaks that make creatures smarter.
+
+Works with both v1.9.15 and v1.9.07b. Please report any bugs you find!
